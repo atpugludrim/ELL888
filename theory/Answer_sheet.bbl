@@ -1,0 +1,36 @@
+\begin{thebibliography}{1}
+
+\bibitem{links_1}
+Y.~Dong and C.-Y.~J. Peng, ``Principled missing data methods for researchers,''
+  {\em SpringerPlus}, vol.~2, no.~1, pp.~1--17, 2013.
+
+\bibitem{repo}
+D.~Dua and C.~Graff, ``{UCI} machine learning repository,'' 2017.
+
+\bibitem{seeds}
+M.~Charytanowicz, J.~Niewczas, P.~Kulczycki, P.~A. Kowalski, S.~{\L}ukasik, and
+  S.~{\.Z}ak, ``Complete gradient clustering algorithm for features analysis of
+  x-ray images,'' in {\em Information technologies in biomedicine}, pp.~15--24,
+  Springer, 2010.
+
+\bibitem{wine}
+S.~Aeberhard, D.~Coomans, and O.~De~Vel, ``Comparative analysis of statistical
+  pattern recognition methods in high dimensional settings,'' {\em Pattern
+  Recognition}, vol.~27, no.~8, pp.~1065--1077, 1994.
+
+\bibitem{MNIST}
+Y.~LeCun, L.~Bottou, Y.~Bengio, and P.~Haffner, ``Gradient-based learning
+  applied to document recognition,'' {\em Proceedings of the IEEE}, vol.~86,
+  no.~11, pp.~2278--2324, 1998.
+
+\bibitem{hep}
+B.~Cestnik, I.~Kononenko, and I.~Bratko, ``Assistant 86: A
+  knowledge-elicitation tool for sophisticated users,'' in {\em Proceedings of
+  the 2nd European conference on European working session on learning},
+  pp.~31--45, 1987.
+
+\bibitem{hep2}
+P.~Diaconis and B.~Efron, ``Computer-intensive methods in statistics,'' {\em
+  Scientific American}, vol.~248, no.~5, pp.~116--131, 1983.
+
+\end{thebibliography}

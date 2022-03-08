@@ -1,0 +1,33 @@
+https://springerplus.springeropen.com/articles/10.1186/2193-1801-2-222
+https://arxiv.org/pdf/1904.09792v1.pdf
+https://arxiv.org/pdf/1910.09383v1.pdf
+Datasets: https://arxiv.org/pdf/2110.14809.pdf
+Look for unsupervised learning datasets
+https://github.com/tensorflow/neural-structured-learning
+
+
+https://archive.ics.uci.edu/ml/datasets/seeds
+https://archive.ics.uci.edu/ml/datasets/StoneFlakes
+##https://archive.ics.uci.edu/ml/datasets/Perfume+Data
+
+Categorical: https://archive.ics.uci.edu/ml/datasets/Poker+Hand
+Mixed: https://archive.ics.uci.edu/ml/datasets/Abalone
+Mixed: https://archive.ics.uci.edu/ml/datasets/Automobile
+Good Mixed: https://archive.ics.uci.edu/ml/datasets/Hepatitis
+
+search clustering: https://archive.ics.uci.edu/ml/datasets.php
+mostly mixture of gaussian: https://www.kaggle.com/harrywang/wine-dataset-for-clustering
+
+
+
+***************************************************
+- Use neural networks to learn density and also incorporate other features
+- Use node2vec like thing for heterogeneous data and use the learned embeddings to generate adj matrix
+- Auto-encoder / encoder-decoder like architectures to get embeddings. PCA. SVD. Decompositions to simplify problem.
+- Might come up with a similarity metric that works for heterogeneous data
+- Use the tried and tested
+No ideas yet for question 2 (semi-supervised) and for question 3 (large data)
+- auto-encoders might work on large data
+- 2 labels should result in graph containing 2 components, though it is semi-labeled so it might have just 1.
+- semi-supervised: similarity s = s+k1*1{y1,y2}-k2*1{y1,1-y2}, k1, k2 >= 0 and y1, y2 \in {0,1}
+- How to handle integers?
