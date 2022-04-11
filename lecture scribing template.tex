@@ -1,0 +1,159 @@
+\documentclass[11pt]{article}
+
+%FOR SCRIBES: Please change the next three lines to reflect the correct
+%FOR SCRIBES: lecture number, name, and date.
+\newcommand{\lecturenumber}{0}
+\newcommand{\scribename}{{Mridul Gupta}}
+\newcommand{\lecturedate}{29 March 2022} 
+
+\usepackage{subfigure}
+\usepackage{color}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{fullpage}
+\usepackage{mathtools}
+\newcommand{\etal}{{\em et al.}}
+\newcommand{\qed}{\mbox{}\hspace*{\fill}\nolinebreak\mbox{$\rule{0.6em}{0.6em}$}}
+\newcommand{\expect}{{\bf \mbox{\bf E}}}
+\newcommand{\prob}{{\bf \mbox{\bf Pr}}}
+
+%--------------------------- Commands and Environments I added -----------------
+\usepackage[english]{babel}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\renewcommand{\baselinestretch}{1.10}
+%%      Fonts:
+%%---------------------------------------------------------------------------
+\newfont{\bssten}{cmssbx10}
+\newfont{\bssnine}{cmssbx10 scaled 900}
+\newfont{\bssdoz}{cmssbx10 scaled 1200}
+
+%---------------------------------------------------------------------------
+\newcounter{topic} \setcounter{topic}{0}
+\newcommand{\topic}[1]{\par \refstepcounter{topic} {\bssdoz \arabic{topic}.~ #1} \par}
+%\newcommand{\topic}[1]{\par \refstepcounter{topic} \vs{2ex} {\bssdoz \arabic{topic}.~ #1} \par \vs{1ex}}
+
+%------------------------------ end of new commands and evironments ------------
+
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\newcommand{\comment}[1]{{\color{gray}[\textsf{#1}]}}
+\newcommand{\redospace}{\small\renewcommand{\baselinestretch}{1.5}\normalsize}
+\newcommand{\undospace}{\small\renewcommand{\baselinestretch}{1}\normalsize}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+%----------------------------- some other things I added ---------------------
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{protocol}[theorem]{Protocol}
+%----------------------------------------------------------------------------
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{remark}[definition]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{proposition}[theorem]{Proposition}
+\newenvironment{proof}{{\bf Proof:}}{$\qed$\par}
+\newenvironment{proofof}[1]{{\bf Proof of #1:}}{$\qed$\par}
+\newenvironment{proofsketch}{{\sc{Proof Outline:}}}{$\qed$\par}
+
+\usepackage{hyperref}
+\hypersetup{
+	bookmarksnumbered
+}
+
+
+	
+	\begin{document}
+		%{	\color{blue}   \textbf{Edit the parts in blue and remove this part}}
+		\begin{center}
+			\framebox{\parbox{6.5in}{
+					{\bf{ELL888 Indian Institute of Technology Delhi} }\\ 
+					{\bf  {\color{blue} {MCM Kernel Optimization}}}
+					\\
+{Scribed by: {\color{blue}\textit{Mridul Gupta (2021AIZ8322)}}\\ Instructors:
+						 Sandeep Kumar and Jayadeva}
+			}}
+			\ \\
+		\end{center}
+%		\noindent{\bf Note}: {LaTeX template courtesy of UC Berkeley EECS dept.}
+		
+		\noindent {\bf Disclaimer}: {These notes have not been subjected to the
+			usual scrutiny reserved for formal publications.  They may be distributed
+			outside this class only with the permission of the Course Coordinator.}
+		\vspace*{4mm}
+		\setcounter{section}{\lecturenumber}
+		%FOR SCRIBES: ---------- Begin Scribing Here ------------------------
+	
+\tableofcontents
+\section{Structure}
+Structure these points later
+    \begin{itemize}
+        \item[$\boxtimes$] Class separability might be worse in the feature space.
+        \item Start with we want to get a bound on the risk on the test data. This
+            requires knowing the distribution from which the data is being generated.
+        \item We cannot know the distribution parameters. So, we estimate the actual risk
+            using empirical risk which is the risk given some (training) samples from the
+            distribution.
+        \item Risk bound equation in VC slt.pdf
+        \item Highlight two parts, the empirical risk and the structural risk
+        \item make note that to reduce risk, we must reduce h (VC-Dimension)
+        \item Mention VC-Dimension bound for $\Delta$-margin classifiers.
+        \item Mention that in general it will be $n+1$ but it can be bound by reducing
+            $\displaystyle \dfrac{R^2}{\Delta^2}$
+        \item Show the simplified graph
+        \item This transformation might not take to same dimensional space, might be
+            higher dimensional. This function is a Kernel, that needs to be optimized to
+            optimize structural risk.
+        \item Also mention examples why sometimes even an infinite dimensional kernel
+            might not work. And why we need Kernel Optimization.
+        \item Go into the details of how to do this.
+        \item Mention appropriate theorems, definitions and lemmas in between.
+        \item Add a key takeaways section.
+    \end{itemize}
+
+Refined list to structure
+    \begin{itemize}
+        \item A little intro to MCM (slt, minimize vc dim bound, structural risk minimization).
+        \item What is kernel optimization, why it is needed
+        \item Amari's idea, magnifying around support vectors
+        \item Xiong's idea of using a scatter matrix, Fisher discriminant
+        \item Xiong's idea of creating a kernel scatter matrix, how it's equal to normal scatter
+        \item Empirical feature space, matrix equations
+        \item solving generalized eigenvalue problems
+        \item Getting the MCM with optimized kernel
+    \end{itemize}
+
+
+\section{Introduction}
+Support Vector Machines (SVMs) are older than the state of Haryana (the linear variant at
+least), and the kernel version of SVMs were proposed by Vapnik \etal in 1992. Vapnik and
+Chernvonenkis along with others also developed theory key thoeretical concepts that
+constitute statistical learning theory. In what follows, we will discuss the theoretical
+and practical advancements since then that led to the work titled ``Kernel optimization
+using conformal maps for the minimal complexity machine'' by Jayadeva \etal.\par
+Since this is the congruence of two paths, one leading to MCMs and the other leading to
+kernel optimization in a data dependent way, in the following we first discuss MCMs, and
+then kernel optimization, and finally how the two fit together.
+
+
+\section{Where does MCM come from?}
+The key concepts that lead to MCMs were available in statistical learning theory long ago,
+but weren't applied until 2015. So let's discuss the key concepts that naturally lead to
+minimal complexity machines.
+\cite{mr:random}
+
+
+\section{3}
+
+	
+	\bibliographystyle{plain}
+	\begin{thebibliography}{10}
+		\bibitem{mr:random}
+	Cormen TH, Leiserson CE, Rivest RL, Stein C. 
+		\newblock {\em Introduction to algorithms.}.
+		\newblock MIT press.	2009 Jul 31
+	\end{thebibliography}
+	
+	
+	
+\end{document}
