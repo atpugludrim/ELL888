@@ -6,7 +6,8 @@
 \newcommand{\scribename}{{Mridul Gupta}}
 \newcommand{\lecturedate}{29 March 2022} 
 
-\usepackage{subfigure}
+%\usepackage{subfigure}
+\usepackage{subcaption}
 \usepackage{color}
 \usepackage{afterpage}
 \usepackage[final]{hyperref}
@@ -598,7 +599,38 @@ the training sample size plays a much larger role in reducing $\varepsilon$ and
 in turn reducing the structural risk, it doesn't help a lot in big data setting
 to focus on structural risk minimization. But MCMs still provide a sparser model
 to be deployed on power constrained devices.\par
-For visualizations, results and more please see the papers referred.
+Lastly, I'd like to show you some visualization I made by running an
+implementation of the algorithm in~\cite{keropt}. Figure~\ref{fig:data} shows the data,
+I generate two classes from multivariate normal distributions. There are $100$
+data points, $50$ in each class. And figure~\ref{fig:kernelPCA} shows the projected class for
+an unoptimized and an optimized Gaussian RBF kernel. This is implemented in
+\texttt{python} using \texttt{scipy}'s linear optimization library for solving
+MCM and Lanczos implementation (\texttt{eigsh}) for solving generalized
+eigenvalaue problem. The MCM solution gives $85$ out of the $100$ data points as
+support vectors, so $15\%$ of them (that is $12$ of them) are randomly chosen as
+empirical cores. This was decided empirically. Basically distorting the space
+everywhere is a really bad choice. The accuracy on unseen test data was $65\%$.
+After optimization, the number of support vectors went down to 75, while the
+accuracy rose to $75\%$. It can be seen in the figure~\ref{fig:kernelPCA} that
+optimization doesn't really improve class separation by a big margin since the
+data is already pretty well separated in the input space. Also, we can see that
+the within class scatter reduces for one of the classes. What's happening with
+the other class is not yet fully understood to me.
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=.7\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/Figure_0.png}
+    \caption{\label{fig:data}Training Data}
+\end{figure}
+\begin{figure}[!htbp]
+    \centering
+    \subfloat[Unoptimized RBF Kernel]{
+        \includegraphics[width=.4\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/Figure_1.png}}
+    \subfloat[Optimized Kernel]{
+        \includegraphics[width=.4\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/Figure_2.png}}
+    \caption{\label{fig:kernelPCA}Training Data mapped through kernels and then projected
+    to two dimensional Euclidean space through kernel PCA.}
+\end{figure}\par
+For other visualizations, results and more please see the papers referred.
 \afterpage{\clearpage}
 
 
