@@ -8,10 +8,13 @@
 
 \usepackage{subfigure}
 \usepackage{color}
+\usepackage{afterpage}
+\usepackage[final]{hyperref}
 \usepackage{url}
-\usepackage{graphicx}
+\usepackage[final]{graphicx}
 \usepackage{fullpage}
 \usepackage{mathtools}
+\usepackage[final]{showkeys}
 \newcommand{\etal}{{\em et al.}}
 \newcommand{\qed}{\mbox{}\hspace*{\fill}\nolinebreak\mbox{$\rule{0.6em}{0.6em}$}}
 \newcommand{\expect}{{\bf \mbox{\bf E}}}
@@ -115,7 +118,7 @@
 %     \begin{itemize}
 %         \item A little intro to MCM (slt, minimize vc dim bound, structural risk minimization).
 %         \item What is kernel optimization, why it is needed
-%         \item Amari's idea, magnifying around support vectors
+%         \item Amari's idea, magnifying around support mathbftors
 %         \item Xiong's idea of using a scatter matrix, Fisher discriminant
 %         \item Xiong's idea of creating a kernel scatter matrix, how it's equal to normal scatter
 %         \item Empirical feature space, matrix equations
@@ -128,7 +131,7 @@
 Support Vector Machines (SVMs) are older than the state of Haryana (the linear variant at
 least), and the kernel version of SVMs were proposed by Vapnik \etal\ in 1992. Vapnik and
 Chernvonenkis along with others also developed theory key thoeretical concepts that
-constitute statistical learning theory. In what follows, we will discuss the theoretical
+constitute statistical learning theory. In what follows, we discuss the theoretical
 and practical advancements since then that led to the work titled ``Kernel optimization
 using conformal maps for the minimal complexity machine'' by Jayadeva \etal\par
 Since this is the congruence of two paths, one leading to MCMs and the other leading to
@@ -137,17 +140,18 @@ then kernel optimization, and finally how the two fit together.
 
 
 \section{Background}
-The key concepts that lead to MCMs were available in statistical learning theory long ago,
-but weren't applied until 2015. So let's discuss the key concepts that naturally lead to
-minimal complexity machines.
-
+The key concepts that led to MCMs were available in statistical learning theory long ago,
+but weren't applied until 2015. So I'll provide the background information
+necessry to understand MCMs. Then we discuss how a similar line of thinking
+naturally leads to kernel optimization, followed by a discussion about
+application of kernel optimization in MCMs.
 \subsection{Statistical Learning Theory}
-It all starts by stating the objective of Machine Learning. The model of
+Let's starts by clearly stating the objective of Machine Learning. The model of
 learning from examples can be descibed using three components~\cite{slt}:
 \begin{enumerate}
-    \item a generator of random vectors $x$, drawn independently from a fixed
+    \item a generator of random mathbftors $x$, drawn independently from a fixed
         but unknown distribution $P(x)$;
-    \item a supervisor that returns an output vector $y$ for every input vector
+    \item a supervisor that returns an output mathbftor $y$ for every input mathbftor
         $x$, according to a conditional distribution function $P(y\;\lvert\;x)$,
         also fixed but unknown;
     \item a learning machine capable of implementing a set of functions
@@ -162,13 +166,14 @@ drawn from the distribution $P(x)P(y\;\lvert\;x)$ which is the joint
 distribution $P(x,y)$. The $M$ samples are assumed to be {\em independent and
 identically distributed (i.i.d.)}.\par
 Next we need to define what ``predicting the response in the best possible way
-means''. For this we need to define how correct is $f(x,\alpha)$ is compared to
-$y$. This is done by defining an error function (also called loss function or
+means''. For this we need to define how correct is $f(x,\alpha)$ is compared
+with
+$y$. For this, one usually defines an error function (also called loss function or
 cost function) that assigns some real valued number to two objects (may be
-vectors, matrices, scalars, or general mathematical objects). This number
+mathbftors, matrices, scalars, or general mathematical objects). This number
 represents the ``cost`` incurred by predicting $f(x,\alpha)$ given $y$.\par
 The next important quantity is the {\em risk functional} which is the
-expectation of loss. Since, $x$ is a random vector, so the output of
+expectation of loss. Since, $x$ is a random mathbftor, the output of
 $f(\cdot,\alpha)$ is also random, so is the loss $\mathcal{L}$. Thus, it makes
 sense to take the expectation of it.
 \begin{equation}
@@ -179,7 +184,7 @@ sense to take the expectation of it.
 The goal is then to find $\alpha^*$ that minimizes the risk functional
 $R(\alpha)$. The problem is that $P(x,y)$ is unknown, all that's known is the
 training set $\{(x_i,y_i)\}_{i=1}^M$.\par
-What we do have then is:
+What we do have, then, is:
 \begin{equation}
     R_{\text{emp}}(\alpha)=\frac{1}{M}\sum_{i=1}^M
     \mathcal{L}\bigl(y,f(x,\alpha)\bigr)
@@ -202,9 +207,9 @@ $\mathcal{L}\bigl(y,f(x,\alpha)\bigr)$. where
 \end{equation} and $h$ is the VC-dimension of the set of functions.}\par
 On the RHS of equation~\ref{eqn:pac}, the term other than the empirical risk
 $R_{\text{emp}}(\alpha)$ is called the {\em structural risk}.\par
-Another important result from Vapnik that will be needed to continue our
+Another important result from Vapnik that shall be needed to continue our
 discussion of MCMs is:
-{\theorem (Vapnik) Let vectors $x\in X$ belong to a sphere of radius $R$. Then
+{\theorem (Vapnik) Let mathbftors $x\in X$ belong to a sphere of radius $R$. Then
 the set of $\Delta$-margin separating hyperplanes has the VC-dimension $h$
 bounded by the inequality
 \begin{equation}
@@ -219,7 +224,7 @@ prediction on future samples. We can do this by tightening the bound on the RHS
 of equation~\ref{eqn:pac}. We can optimize the empirical risk, and we can
 optimize the structural risk. Note that in structural risk, the only thing we
 can alter is $\varepsilon$. We need to minimize $\varepsilon$ to tighten the
-bound on the risk. And in the expansion of $\varepsilon$ we can only alter $h$
+bound on the risk. And in the expansion of $\varepsilon$ we can alter only $h$
 assuming the training sample size is as large as we can get.
 $\varepsilon\propto h$. Thus to reduce $\varepsilon$, we want to minimize
 $h$.\par
@@ -241,15 +246,15 @@ simultaneously.
     arrows on radius}
 \end{figure}
 \subsubsection{MCM formulations}
-The mathematical formulations of MCM~\cite{MCM} starts by defining a
+The mathematical formulations of MCM~\cite{MCM} start by defining a
 mathematical quantity $h_{MCM}$ as
 \begin{equation}
     h_{MCM}=\frac{\max_{i=1,2,\dotsc,M}\lVert u^Tx_i+v\rVert}{\min_{i=1,2,\dotsc,M}\lVert u^Tx_i+v\rVert}
 \end{equation}
 where it is assumed that the separating hyperplane is $u^Tx+v=0$. It is assumed
-that the data is linearly separable.\par
-Augmenting the data vectors to have a feature whose value is always 1, and
-concatenating the weight vector, we have $\hat{x}_i\gets\{x_i;1\}$ and
+that the data are linearly separable.\par
+Augmenting the data mathbftors to have a feature whose value is always 1, and
+concatenating the weight mathbftor, we have $\hat{x}_i\gets\{x_i;1\}$ and
 $\hat{u}\gets \{u;v\}$. Then the hyperplane goes through the origin in the
 $\mathbb{R}^{(n+1)}$ space.\par
 Then, the margin $\Delta$ is given by
@@ -257,7 +262,7 @@ Then, the margin $\Delta$ is given by
     \Delta=\min_{i=1,2,\dotsc,M}\frac{\lVert\hat{u}^T\hat{x}_i\rVert}{\lVert\hat{u}\rVert}
 \end{equation}
 and the radius is just $R=\max_{i=1,2,\dotsc,M}\lVert\hat{x}_i\rVert$. So, the
-ration of interest $\dfrac{R}{\Delta}$ is given by:
+ratio of interest $\dfrac{R}{\Delta}$ is given by:
 \begin{equation}
     \frac{R}{\Delta}=\frac{\max_{i=1,2,\dotsc,M}\lVert\hat{x}_i\rVert}{\min_{i=1,2,\dotsc,M}\frac{\lVert\hat{u}^T\hat{x}_i\rVert}{\lVert\hat{u}\rVert}}=\frac{\max_{i=1,2,\dotsc,M}\lVert\hat{u}\rVert\lVert\hat{x}_i\rVert}{\min_{i=1,2,\dotsc,M}\lVert\hat{u}^T\hat{x}_i\rVert}
 \end{equation}
@@ -273,7 +278,7 @@ Thus
     \Rightarrow
     h_{MCM}^2&\le\left(\frac{R}{\Delta}\right)^2<1+\left(\frac{R}{\Delta}\right)^2
 \end{align}
-From equation~\ref{vcbound} we have for large dimensional data:
+From equation~\ref{eq:vcbound} we have for large dimensional data:
 \begin{equation}
     h\le 1+\left(\frac{R}{\Delta}\right)^2
 \end{equation}
@@ -286,14 +291,14 @@ such that
     \alpha h_{MCM}^2\le h\le\beta h_{MCM}^2
 \end{equation}
 That is $h^2_{MCM}$ is an exact bound on the VC dimension $h$. And since the
-data is linearly separable, $u^Tx_i+v\ge 0$ if $y_i=1$ and $u^Tx_i+v\le 0$ if
+data are linearly separable, $u^Tx_i+v\ge 0$ if $y_i=1$ and $u^Tx_i+v\le 0$ if
 $y_i=-1$. Thus $\lVert u^Tx_i+v\rVert$ can be written as $y_i(u^Tx_i+v)$. Thus
 the machine capacity can be minimized by keeping $h_{MCM}^2$ as small as
 possible.
 \begin{equation}
     \underset{u,v}{\operatorname{minimize}}\;\; h_{MCM}=\frac{\max_{i=1,\dotsc,M}y_i(u^Tx_i+v)}{\min_{i=1,\dotsc,M}y_i(u^Tx_i+v)}
 \end{equation}
-Further the authors show that the above formulation can be further simplified
+Further the authors show that the above formulation can be simplified
 by writing:
 \begin{align}
     &h_{MCM}=\frac{g}{l}\\
@@ -318,7 +323,7 @@ noting that $p\cdot l=1$
 Equations~\ref{eq:1}-\ref{eq:3} define the Minimal Complexity Machine (MCM). And
 it is trained by solving the Linear Programming Problem defined above.
 \subsubsection{Generalizing the MCM}
-The MCM above is further generalized to allow for classification errors by
+The MCM above is generalized to allow for classification errors by
 introducing slack variables.
 \begin{align*}
     &\min_{w,b,h,q}h+C\cdot\sum_{i=1}^Mq_i\\
@@ -339,7 +344,7 @@ some errors. As of yet, this doesn't use a kernel function $K(\cdot,\cdot)$. Ass
 is a kernel function corresponding to the map $\phi(\cdot)$;
 $\phi(x_j)^T\phi(x_k)=K(x_j,x_k)$. Also, since $\phi(x_i), i=1,\dotsc,M$ forms a
 basis for the feature space in which $w$ lies, $w$ can be written as a linear
-combination of the basis vectors
+combination of the basis mathbftors
 \begin{align*}
     &w=\sum_{j=1}^M\lambda_j\phi(x_j)\\
     &\Rightarrow
@@ -352,8 +357,8 @@ Now, the MCM formulation can be rewritten using $K(\cdot,\cdot)$ as
     &1\le y_i\left(\sum_{j=1}^M\lambda_jK(x_j,x_i)+b\right)+q_i,\quad i=1,\dotsc,M\\
     &\label{eq:mcmend}q_i\ge 0\quad i=1,\dotsc,M
 \end{align}
-After optimizing, those vectors $x_i$ for which the corresponding $\lambda_i$ is
-non zero form the support vectors that support $w$.
+After optimizing, those mathbftors $x_i$ for which the corresponding $\lambda_i$ is
+non zero form the support mathbftors that support $w$.
 $SV=\{i\;\lvert\;\lambda_i\ne 0\}$. One last
 thing that needs to be defined explicitly is how to predict on new data once the
 optimization is complete. The class is assigned as:
@@ -361,38 +366,57 @@ optimization is complete. The class is assigned as:
 SV}\lambda_iK(x_i,x_{\text{test}})+b\right)\]
 This completes the MCM formulation. One thing to note is Vapnik's SVM
 formulation was also motivated from the fact that constraining the VC-dimension
-will improve generalization, but Vapnik only does this by trying to maximize the
-margin $\Delta$, while in MCM the ratio $R/\Delta$ is constrained to control the
+will improve generalization, but Vapnik does this by only trying to maximize the
+margin $\Delta$, whereas in MCM the ratio $R/\Delta$ is constrained to control the
 complexity of the machine. This results in an extra constraint bounding the
 maximum distance from the hyperplane from above (eq.~\ref{eq:upbound}), thus
 providing actual theoretical guarantees. It has also been experimentally showed
-that the numebr of support vectors (and thus the size itself of MCM) is much
+that the number of support mathbftors (and thus the size itself of MCM) is much
 smaller, allowing these machines to be used in edge devices where neural
 networks can't be used.
+\begin{figure}
+    \centering
+    \includegraphics[draft=false,width=.8\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/MCM_vs_SVM.jpg}
+    \caption{\label{fig:mcmvsvm}Separating hyperplanes learned by MCM and SVM}
+\end{figure}
+In figure~\ref{fig:mcmvsvm}, I take a very simple two dimensional dataset, and
+solve a linear MCM without slack using an online linear programming solver. To compare with SVM, I
+use \texttt{scikit-learn}'s \texttt{LinearSVC} module with a very high value of
+C (so basically without slack) and plot the decision boundaries for the two.
+It's not at all apparent that one of them has VC-dimension bound by a known
+number as a side effect of optimization, whereas the other doesn't. And the
+difference in performance on test dataset can only be understood by looking at
+the numbers.\par
+{\bf Note:} Since MCM is linear optimization, the kernel is not required to be
+positive definite from the optimization perspective. From the SVM theory
+perspective, it'll then not lie in the familiar Reproducing Kernel Hilbert
+Space. It'll instead lie in a {\em Krein space} and the inner product will have
+to be adjusted accordingly. We only consider Mercer Kernels.
+\afterpage{\clearpage}
 \subsection{Kernel Optimization}
-The key ideas for kernel optimization comes from~\cite{amari}. When the data is
+The key ideas for kernel optimization comes from~\cite{amari}. When the data are
 non-linearly separable, it is assumed that when projected to a space of high
-enough dimension, then they'll be separable. But this is only true when the
-mapping function is suitably chosen. There is no one kernel that defeats all
+enough dimension, they'll be separable. But this is only true when the
+mapping function is suitably chosen. No kernel defeats all
 others. If the kernel is ``wrong'' for the current task, the class separability
-in the feature space/image space might be poorer than it was in input space.
+in the feature space/image space may be poorer than it was in input space.
 \subsubsection{Motivation}
 Again let's consider the data shown in figure~\ref{fig:1}. Even though the data
-is already linearly separable, let's see what we can do to improve the class
+are already linearly separable, let's see what we can do to improve the class
 separability. Consider figures~\ref{fig:3}-\ref{fig:5}. We can see that if we
 magnify around the feature space around the class boundary (near hyperplane)
-while compress the space around the edges, we can improve class separability
+while compressing the space around the edges, we can improve class separability
 thus improving generalization.
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=.5\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/margin_func3.png}
-    \caption{\label{fig:3}Identity map, to compare}
+    \caption{\label{fig:3}Identity map, to compare with}
 \end{figure}
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=.5\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/margin_func4.png}
     \caption{\label{fig:4}A non-linear map that is steeper between the classes,
-    shallower within}
+    shallower within (data dependent)}
 \end{figure}
 \begin{figure}[!htbp]
     \centering
@@ -402,20 +426,21 @@ thus improving generalization.
 \end{figure}
 \subsubsection{Formulations}
 This is approximately what Amari \etal\ do. They do not compress around the
-edges, but just focus on magnifying on the confusion region, the boundary. That
+edges, but just focus on magnifying on the confusion region, the boundary while
+leaving the radius intact. That
 is they try to increase the margin even further by having an appropriate
 distortion. Since the boundary is not generally known, magnification is done
-close to support vectors, since they are close to the boundary. These are called
+close to support mathbftors, since they are close to the boundary. These are called
 ``empirical cores'' in the context of kernel optimization (since after
-optimization the actual support vectors will be different).\par
+optimization the actual support mathbftors will be different).\par
 The ``magnification'' is done by applying a {\em conformal transformation} to
-the kernel. Conformal transformation of a space preserves angles but might
+the kernel. Conformal transformation of a space preserves angles but may
 change lengths locally, which is just what we need, to magnify without altering
 angular structures. Conformal transformation of the kernel \textit{by a factor
 $c(x)$} is given by:
 \[\tilde{K}(x,x')=c(x)c(x')K(x,x')\]
 This transformation function is constructed in a data dependent way to be
-maximal around support vectors. For more detail about how to arrive at this, and
+maximal around support mathbftors. For more detail about how to arrive at this, and
 the underlying Riemannian metric tensor based theory, refer~\cite{amari}.\par
 This work is taken further by Xiong \etal~\cite{xiong}. Until now we have been
 talking about ``class separability'' subjectively, but Xiong \etal\ solidify
@@ -428,14 +453,18 @@ they use
 \end{align*}
 $k_0(\cdot,\cdot)$ is a basic kernel, like Gaussian.
 $k_1(x,a_i)=\exp(-\gamma\lVert x-a_i\rVert^2)$ and $a_i$ are ``empirical
-cores''. $\alpha_i$'s are called combination coefficients. It is easy to write
+cores''. We can see that $k_1(x,a_i)$ is maximum near $a_i$, and thus most
+magnification is around the empirical cores. Also, to get an intuitive sense of
+``magnification'', consider that the $k_0(\cdot,\cdot)$ is some sort of distance
+or similarity measure (that's what the Riemannian metric implies, measure of
+distances). $\alpha_i$'s are called combination coefficients. It is easy to write
 the matrix notation of these by defining $K\text{ and }K_0$ as the matrix
 corresponding to $k(\cdot,\cdot)$ and $k_0(\cdot,\cdot)$ respectively.
 \[K=[c(x_i)c(x_j)k_0(x_i,x_j)]_{M\times M}=CK_0C\]
 where $C=diag(c(x_1),c(x_2),\dotsc,c(x_M))$. Furthermore
 \begin{equation}
     \label{eq:alk}
-    \vec{c}=\begin{pmatrix}
+    \mathbf{c}=\begin{pmatrix}
         1&k_1(x_1,a_1)&\dots&k_1(x_1,a_{n_{ec}})\\
         1&k_2(x_2,a_1)&\dots&k_1(x_2,a_{n_{ec}})\\
         \vdots&\vdots&\ddots&\vdots\\
@@ -445,7 +474,7 @@ where $C=diag(c(x_1),c(x_2),\dotsc,c(x_M))$. Furthermore
             \alpha_1\\
             \vdots\\
             \alpha_{n_{ec}}
-    \end{pmatrix}\stackrel{\Delta}{=}K_1\vec{\alpha}
+    \end{pmatrix}\stackrel{\Delta}{=}K_1\mathbf{\alpha}
 \end{equation}
 where $K_1$ is an $M\times(n_{ec}+1)$ matrix.\par
 Next, they use a measure of class separability called {\em Fisher scalar} to
@@ -461,7 +490,12 @@ $i^\text{th}$ class. $\{z_j\}_{j=1}^M$ are the images of the training data in
 the empirical feature space. $M_1+M_2=M$. $\bar{z},\bar{z}_1,\bar{z}_2$ are the
 centers of the entire training data and those of class 1 and 2 resepctively in
 the empirical feature space. $z_j^i$ is the $j^\text{th}$ data sample in
-$i^\text{th}$ class.
+$i^\text{th}$ class. $S_b$ and $S_w$ are the between-class scatter and
+within-class scatter. Reducing the within-class scatter reduces the neighborhood
+size, thus reducing the radius. While increasing the between-class scatter
+increases the distances between the samples of different classes. Thus the
+chances of misclassification in a dense neighborhood go down (or structural risk
+goes down). This is why we want maximize $J$.
 \begin{figure}[!htbp]
     \centering
     \includegraphics[width=.8\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/class_sep.png}
@@ -497,54 +531,54 @@ matrices $B\text{ and }W$ as:
 \end{align}
 Also, denote $B_0$ and $W_0$ as the between-class and within-class kernel
 scatter matrices corresponding to the basic kernel $K_0$.
-{\theorem (Xiong \etal) Let $1_k$ be the $k$-dimensional vector whose
+{\theorem (Xiong \etal) Let $1_k$ be the $k$-dimensional mathbftor whose
 entries are all equal to one. Then
 \begin{equation}
     \label{eq:gep}
-    J=\frac{1_M^TB1_M}{1_M^TW1_M}=\frac{\vec{c}^TB_0\vec{c}}{\vec{c}^TW_0\vec{c}}
+    J=\frac{1_M^TB1_M}{1_M^TW1_M}=\frac{\mathbf{c}^TB_0\mathbf{c}}{\mathbf{c}^TW_0\mathbf{c}}
 \end{equation}
 Proof: refer~\cite{xiong}
 }
-Xiong \etal\ then optimize the kernel so that the class separability metric $J$
+Xiong \etal\ then optimize the kernel such that the class separability metric $J$
 is maximized using a gradient based approach. Here we diverge to the approach
 used by Jayadeva \etal\ in~\cite{keropt}. Instead of solving as a gradient based
 optimization, they identify the Rayleigh Quotient in equation~\ref{eq:gep} and
 naturally propose it as a Generalized Eigenvalue Problem and try to solve
-simultaneously for $\gamma$ and $\vec{c}$ in
-\[B_0\vec{c}=\gamma W_0\vec{c}
+simultaneously for $\gamma$ and $\mathbf{c}$ in
+\[B_0\mathbf{c}=\gamma W_0\mathbf{c}
 \]
 where $\gamma$ is the set of eigenvalues. This is further rewritten using
-equation~\ref{eq:alk} as $[K_1^TB_0K_1]\vec{\alpha}=\gamma[K_1^T(W_0+DI)K_1]\vec{\alpha}$.
+equation~\ref{eq:alk} as $[K_1^TB_0K_1]\mathbf{\alpha}=\gamma[K_1^T(W_0+DI)K_1]\mathbf{\alpha}$.
 $D$ is a small constant added to the diagonal values for stability, $I$ is
 identity matrix. Let $K_1^TB_0K_1\stackrel{\Delta}{=}P,
 [K_1^T(W_0+DI)K_1]\stackrel{\Delta}{=}Q$. So we have 
 \begin{equation}
-    \label{eq:GEP}P\vec{\alpha}=\gamma Q\vec{\alpha}
+    \label{eq:GEP}P\mathbf{\alpha}=\gamma Q\mathbf{\alpha}
 \end{equation}\par
-From the solution we can get $\vec{\alpha}$ (corresponding to maximum eigenvalue
-$\gamma$), which in turn gives $\vec{c}$, which in turn gives the conformal
+From the solution we can get $\mathbf{\alpha}$ (corresponding to maximum eigenvalue
+$\gamma$), which in turn gives $\mathbf{c}$, which in turn gives the conformal
 map transformed kernel $K$. And, finally we have enough theory to discuss Kernel
 optimization for MCMs. Note, all the previous theory regarding kernel
-optimization was in context of support vector machines (SVMs).
+optimization was in context of support mathbftor machines (SVMs).
 \section{Kernel optimization using conformal maps for the minimal complexity
 machine~\cite{keropt}}
 We have basically every ingredient necessary to talk about this: we have the
 motivation to use MCMs, we have the motivation and the method to perform
 kernel optimization, we have the statistical learning theory backing up our
-intuition that separating out classes would be better. Now let's talk about how
+intuition that separating out classes should improve generalization. Now let's talk about how
 kernel optimization is done in the context of MCMs. It's just a simple
 algorithm:
 \begin{enumerate}
     \item Transform the dataset to zero mean and unit variance.
     \item Solve the optimization defined in
         equations~\ref{eq:mcmstart}-\ref{eq:mcmend} using the basic kernel to
-        get support vectors for which $\lambda_i \ne 0$ (or to account for
+        get support mathbftors for which $\lambda_i \ne 0$ (or to account for
         computational limitations, $\lvert\lambda_i\rvert > \varepsilon$ where
         $\varepsilon$ is a small constant.
     \item Compute $W_0$, $B_0$ (eq~\ref{eq:W},\ref{eq:B})
     \item Solve the generalized eigenvalue problem in equation~\ref{eq:GEP} to
-        find $\vec{\alpha}$ corresponding to largest eigen value.
-    \item Use $\vec{\alpha}$ to compute the scaling factor $\vec{c}$
+        find $\mathbf{\alpha}$ corresponding to largest eigen value.
+    \item Use $\mathbf{\alpha}$ to compute the scaling factor $\mathbf{c}$
     \item Use the scaling factor to compute the optimized kernel
         $k(x_i,x_j)=c(x_i)c(x_j)k_0(x_i,x_j)$
     \item Use the optimized kernel matrix $K(\cdot,\cdot)$ corresponding to
@@ -554,15 +588,15 @@ algorithm:
 \end{enumerate}
 \par
 Results in~\cite{keropt} shows that MCM with optimized kernels perform better when
-measured by accuracy by a big margin for most of the benchmark datasets as
-compared to vanilla MCM or SVM.  The maximum number of samples in any of these
+measured by accuracy by a big margin for almost all of the benchmark datasets as
+compared with vanilla MCM or SVM.  The maximum number of samples in any of these
 datasets was 1000. When applied on datasets of larger size, the MCM's do not
 perform much better, which is expected from equation~\ref{eq:vareps}. As $M$,
 the training sample size plays a much larger role in reducing $\varepsilon$ and
 in turn reducing the structural risk, it doesn't help a lot in big data setting
 to focus on structural risk minimization. But MCMs still provide a sparser model
 to be deployed on power constrained devices.
-\clearpage
+\afterpage{\clearpage}
 
 
 	
@@ -570,7 +604,7 @@ to be deployed on power constrained devices.
 	\begin{thebibliography}{10}
         \bibitem{amari}
             Amari SI, Wu S. 
-            \newblock{\em Improving support vector machine classifiers by modifying kernel functions.}.
+            \newblock{\em Improving support mathbftor machine classifiers by modifying kernel functions.}.
             \newblock Neural Networks. 1999 Jul 1;12(6):783-9.
         \bibitem{slt}
             Vapnik VN. 
