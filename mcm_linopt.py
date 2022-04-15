@@ -12,14 +12,15 @@ class Timer:
     def __exit__(this, exc_type, exc_val, exc_tb):
         print("{:.4f}s".format(time.perf_counter()-this.start))
 def getdata(x1_size=5,x2_size=4):
-    mu_1 = [1,1]
+    mu_1 = [0,1]
     mu_2 = [3,1]
-    sig_1 = [[0.5,0],[0,2]]
-    sig_2 = [[0.4,0.4],[0.4,1.2]]
+    sig_1 = [[1.2,0],[0,2]]
+    sig_2 = [[2,0.4],[0.4,1.2]]
     rv1 = mvn(mean=mu_1,cov=sig_1)
     rv2 = mvn(mean=mu_2,cov=sig_2)
     randsom = np.random.randint(0,1000)
-    print("Random seed",randsom)
+    randsom = 852
+    print(randsom)
     x1 = rv1.rvs(size=x1_size,random_state=randsom)
     y1 = np.array([-1 for k in range(x1_size)])[:,None]
     x2 = rv2.rvs(size=x2_size,random_state=randsom)
@@ -41,7 +42,7 @@ def getdata(x1_size=5,x2_size=4):
     x_test = (x_test-np.mean(x,0))/std
     return x,y,x_test,y_test
 
-def kernel(x1,x2,gamma=0.5):
+def kernel(x1,x2,gamma=0.4):
     return np.exp(-gamma*np.sum(np.square(x1-x2)))
 
 def getkernelmatrix(x):
@@ -53,7 +54,7 @@ def getkernelmatrix(x):
 
 def get_c_for_linopt(x):
     c = [1,0]
-    C = 1.0
+    C = 1e1
     for k in range(x.shape[0]):
         c.append(0)
     for k in range(x.shape[0]):
@@ -100,9 +101,10 @@ def get_Aub_bub_for_linopt(K,y):
     return Aub, bub
 
 def get_bounds_for_linopt(x):
-    bounds = [(1,None),(None,None)]
-    for _ in range(x.shape[0]):
-        bounds.append((None,None))
+    bounds = [(1,None),(0,None)]
+    for _ in range(x.shape[0]-1):
+        bounds.append((0,None))
+    bounds.append((None,None))
     for _ in range(x.shape[0]):
         bounds.append((0,None))
     return bounds
@@ -137,9 +139,9 @@ b = res.x[101]
 ctr = 0
 for i,l in enumerate(lamb):
     if abs(l) <= 1e-6:
-        print(f"Non support vector: {i}")
         ctr+=1
     else:
+        print(f"support vector: {i}")
         SV.append(i)
         SVl.append(l)
 
@@ -159,11 +161,13 @@ print(acc*100,"%")
 print("Number of support vectors",len(SV))
 
 
+n_ec = len(SV)
+core_points = SV
+
+
 # define K1 matrix
-n_ec = int(len(SV)*0.15)
-core_points = SV[:n_ec]
 K1 = np.ones((100,n_ec+1))
-k1_gamma = 0.02
+k1_gamma = 5
 for i in range(100):
     for j in range(n_ec):
         K1[i,j+1]=kernel(x[i],x[SV[j]],k1_gamma)
@@ -216,9 +220,9 @@ b = res.x[101]
 ctr = 0
 for i,l in enumerate(lamb):
     if abs(l) <= 1e-6:
-        print(f"Non support vector: {i}")
         ctr+=1
     else:
+        print(f"support vector: {i}")
         SV.append(i)
         SVl.append(l)
 

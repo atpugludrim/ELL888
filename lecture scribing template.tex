@@ -630,6 +630,26 @@ the other class is not yet fully understood to me.
     \caption{\label{fig:kernelPCA}Training Data mapped through kernels and then projected
     to two dimensional Euclidean space through kernel PCA.}
 \end{figure}\par
+\afterpage{\clearpage}
+I see on inspection that the unconstrained lambda values grow to large in magnitude
+in both negative and positive side. So, I constrain them to be $\ge 0$. With this I get
+the following results: support vectors before optimization of kernel - 11, support vectors
+after optimization - 5, accuracy on test set before - $60\%$, after kernel optimization - $75\%$,
+all of the support vectors used as empirical cores. See figures.
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=.7\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/Figure_4.png}
+    \caption{\label{fig:data}Training Data}
+\end{figure}
+\begin{figure}[!htbp]
+    \centering
+    \subfloat[Unoptimized RBF Kernel]{
+        \includegraphics[width=.4\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/Figure_5.png}}
+    \subfloat[Optimized Kernel]{
+        \includegraphics[width=.4\linewidth]{/home/mridul/Desktop/iitd_rishi_laptop/backups/ELL888/Figure_6.png}}
+    \caption{\label{fig:kernelPCA}Training Data mapped through kernels and then projected
+    to two dimensional Euclidean space through kernel PCA.}
+\end{figure}\par
 For other visualizations, results and more please see the papers referred.
 \afterpage{\clearpage}
 
