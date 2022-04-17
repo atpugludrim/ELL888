@@ -1,0 +1,12 @@
+\documentclass[preview]{standalone}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\begin{document}
+\[
+\min_{\varsigma,b,h,q}h+C\cdot\sum_{i=1}^Mq_i\quad\text{subject to}\]\[
+h\ge y_i\left[\sum_{j=1}^M\varsigma_jK(x_j,x_i)+b\right]+q_i,\quad i=1,\dotsc,M\]
+\[
+1\le y_i\left[\sum_{j=1}^M\varsigma_jK(x_j,x_i)+b\right]+q_i,\quad i=1,\dotsc,M\]
+\[
+q_i \ge 0,\quad i=1,\dotsc,M\]
+\end{document}

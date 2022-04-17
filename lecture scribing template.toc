@@ -1,5 +1,12 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Structure}{1}{section.1}%
-\contentsline {section}{\numberline {2}Introduction}{2}{section.2}%
-\contentsline {section}{\numberline {3}Where does MCM come from?}{2}{section.3}%
-\contentsline {section}{\numberline {4}3}{3}{section.4}%
+\contentsline {section}{\numberline {1}Introduction}{1}{section.1}%
+\contentsline {section}{\numberline {2}Background}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Statistical Learning Theory}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Minimal Complexity Machines~\cite {MCM}}{3}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Motivation}{3}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}MCM formulations}{3}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Generalizing the MCM}{6}{subsubsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.3}Kernel Optimization}{8}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Motivation}{8}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Formulations}{8}{subsubsection.2.3.2}%
+\contentsline {section}{\numberline {3}Kernel optimization using conformal maps for the minimal complexity machine~\cite {keropt}}{12}{section.3}%

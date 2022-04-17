@@ -1,0 +1,3 @@
+Use standalone package to create latex document.
+Create dvi.
+Use dvisvgm with --no-font option
